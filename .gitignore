@@ -1,0 +1,28 @@
+# Credentials
+.env
+*.pem
+*.key
+client_secrets.json
+token.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# Output
+output/
+*.mp4
+*.srt
+*.jpg
+*.png
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
