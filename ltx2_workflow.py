@@ -488,6 +488,12 @@ def install_requirements():
         os.system(f"git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git {custom_nodes_dir}/ComfyUI-VideoHelperSuite")
         os.system(f"pip install -r {custom_nodes_dir}/ComfyUI-VideoHelperSuite/requirements.txt")
 
+    # 6. Instalar ComfyUI-LTXVideo (necessário para EmptyLatentVideo)
+    if not os.path.exists(f"{custom_nodes_dir}/ComfyUI-LTXVideo"):
+        print("Instalando ComfyUI-LTXVideo...")
+        os.system(f"git clone https://github.com/kijai/ComfyUI-LTXVideo.git {custom_nodes_dir}/ComfyUI-LTXVideo")
+        os.system(f"pip install -r {custom_nodes_dir}/ComfyUI-LTXVideo/requirements.txt")
+
 # ============================================================
 # COMFYUI CLIENT E RUNNER
 # ============================================================
@@ -555,7 +561,7 @@ def build_ltx2_workflow(prompt, duration=15):
         "3": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "LTX-Video-2B-v0.9.safetensors"}},
         "4": {"class_type": "CLIPTextEncode", "inputs": {"text": prompt + ", cinematic 4K, highest quality", "clip": ["3", 1]}},
         "5": {"class_type": "CLIPTextEncode", "inputs": {"text": "low quality, watermark, static, blurry", "clip": ["3", 1]}},
-        "6": {"class_type": "EmptyLatentVideo", "inputs": {"width": 768, "height": 512, "frames": frames, "batch_size": 1}},
+        "6": {"class_type": "EmptyLTXVLatentVideo", "inputs": {"width": 768, "height": 512, "length": frames, "batch_size": 1}},
         "7": {"class_type": "KSampler", "inputs": {"seed": int(time.time()), "steps": 25, "cfg": 3.0, "sampler_name": "euler", "scheduler": "normal", "positive": ["4", 0], "negative": ["5", 0], "latent_image": ["6", 0]}},
         "8": {"class_type": "VAEDecode", "inputs": {"samples": ["7", 0], "vae": ["3", 2]}},
         "10": {"class_type": "VHS_VideoCombine", "inputs": {
