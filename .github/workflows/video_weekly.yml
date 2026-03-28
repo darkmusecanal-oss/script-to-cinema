@@ -201,32 +201,79 @@ jobs:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
-          mkdir -p ${{ env.SCENES_DIR }}
-
+          mkdir -p kaggle-workspace
+          
           python << 'PYTHON_SCRIPT'
           import json
+          import os
           from ltx2_workflow import KaggleLTX2Renderer
 
           with open("output/scripts/script.json", "r") as f:
               script = json.load(f)
 
           scenes = script.get("story_scenes", [])
+          trailer = script.get("trailer")
+          if trailer:
+              scenes.insert(0, trailer)
+
           print(f"Generating notebook for {len(scenes)} scenes")
 
           renderer = KaggleLTX2Renderer()
           code = renderer.generate_notebook_code(scenes)
 
-          with open("render_notebook.py", "w") as f:
+          with open("kaggle-workspace/render_notebook.py", "w") as f:
               f.write(code)
 
-          print("Kaggle notebook code generated")
+          slug = f"{os.environ['KAGGLE_USERNAME']}/script-to-cinema-render".lower()
+          metadata = {
+            "id": slug,
+            "title": "Script-to-Cinema Render",
+            "code_file": "render_notebook.py",
+            "language": "python",
+            "kernel_type": "script",
+            "is_private": "true",
+            "enable_gpu": "true",
+            "enable_internet": "true",
+            "dataset_sources": [],
+            "competition_sources": [],
+            "kernel_sources": [],
+            "model_sources": []
+          }
+          with open("kaggle-workspace/kernel-metadata.json", "w") as f:
+              json.dump(metadata, f, indent=2)
+
+          print("Kaggle workspace prep completed.")
           PYTHON_SCRIPT
 
-      - name: Upload Render Scripts
+          cd kaggle-workspace
+          echo "Pushing kernel to Kaggle..."
+          kaggle kernels push -p .
+
+          echo "Waiting for Kaggle Kernel to complete (this takes ~45 mins)..."
+          export SLUG=$(grep -oP '"id": "\K[^"]+' kernel-metadata.json)
+          
+          while true; do
+            status=$(kaggle kernels status $SLUG 2>/dev/null || echo "status: unknown")
+            echo "Current status: $status"
+            if echo "$status" | grep -qi "complete"; then
+              echo "✅ Kernel run completed!"
+              break
+            elif echo "$status" | grep -qi "error\|cancel\|fail"; then
+              echo "❌ Kernel failed!"
+              exit 1
+            fi
+            sleep 60
+          done
+          
+          echo "Downloading outputs..."
+          mkdir -p ../output/scenes
+          kaggle kernels output $SLUG -p ../output/scenes || echo "No files returned"
+
+      - name: Upload Render Scenes
         uses: actions/upload-artifact@v4
         with:
-          name: render-notebook
-          path: render_notebook.py
+          name: render-scenes
+          path: output/scenes/
           retention-days: 14
 
   # ===========================================================================

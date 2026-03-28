@@ -76,120 +76,7 @@ class LTX2Params:
 # LTX2 WORKFLOW TEMPLATE
 # =============================================================================
 
-LTX2_WORKFLOW_TEMPLATE = {
-    "3": {
-        "class_type": "CheckpointLoaderSimple",
-        "inputs": {
-            "ckpt_name": "{{MODEL_NAME}}"
-        }
-    },
-    "4": {
-        "class_type": "CLIPTextEncode",
-        "inputs": {
-            "text": "{{POSITIVE_PROMPT}}",
-            "clip": ["3", 1]
-        }
-    },
-    "5": {
-        "class_type": "CLIPTextEncode",
-        "inputs": {
-            "text": "{{NEGATIVE_PROMPT}}",
-            "clip": ["3", 1]
-        }
-    },
-    "6": {
-        "class_type": "EmptyLatentVideo",
-        "inputs": {
-            "width": {{WIDTH}},
-            "height": {{HEIGHT}},
-            "frames": {{FRAMES}},
-            "batch_size": 1
-        }
-    },
-    "7": {
-        "class_type": "KSampler",
-        "inputs": {
-            "seed": {{SEED}},
-            "steps": {{STEPS}},
-            "cfg": {{CFG}},
-            "sampler_name": "euler",
-            "scheduler": "normal",
-            "positive": ["4", 0],
-            "negative": ["5", 0],
-            "latent_image": ["6", 0]
-        }
-    },
-    "8": {
-        "class_type": "VAEDecode",
-        "inputs": {
-            "samples": ["7", 0],
-            "vae": ["3", 2]
-        }
-    },
-    "9": {
-        "class_type": "VAEEncodeTiled",
-        "inputs": {
-            "samples": ["7", 0],
-            "vae": ["3", 2]
-        }
-    },
-    "10": {
-        "class_type": "VideoCombine",
-        "inputs": {
-            "fps": {{FPS}},
-            "hdr_comparison_max": 128,
-            "loop_count": 0,
-            "ping_pong_frame": False,
-            "save_output": True,
-            "images": ["8", 0]
-        }
-    },
-    "11": {
-        "class_type": "LTX2VideoScheduler",
-        "inputs": {
-            "model": ["3", 0],
-            "last_frame": {{FRAMES}},
-            "max_frame": {{FRAMES}},
-            "force_inner_temporal_length": {{FRAMES}},
-            "prev_clip_length": 0,
-            "empty_frame_fill": "black"
-        }
-    },
-    "12": {
-        "class_type": "CameraSettings",
-        "inputs": {
-            "camera_mode": "{{CAMERA_MODE}}",
-            "camera_preset": "{{CAMERA_PRESET}}",
-            "custom_path": ""
-        }
-    },
-    "13": {
-        "class_type": "AudioGenerate",
-        "inputs": {
-            "audio_prompt": "{{AUDIO_PROMPT}}",
-            "duration": {{DURATION}},
-            "seed": {{SEED}}
-        }
-    },
-    "14": {
-        "class_type": "VideoAudioMerge",
-        "inputs": {
-            "video": ["10", 0],
-            "audio": ["13", 0],
-            "volume": 0.8,
-            "fade_out_duration": 1.0
-        }
-    },
-    "15": {
-        "class_type": "SaveVideo",
-        "inputs": {
-            "filename_prefix": "{{FILENAME_PREFIX}}",
-            "video": ["14", 0],
-            "format": "mp4",
-            "quality": 95
-        }
-    }
-}
+LTX2_WORKFLOW_TEMPLATE = {}
 
 
 # =============================================================================
@@ -540,56 +427,113 @@ class LTX2WorkflowGenerator:
 class KaggleLTX2Renderer:
     """Renderer LTX2 via Kaggle Notebook."""
 
-    NOTEBOOK_CODE_TEMPLATE = '''# Script-to-Cinema: LTX2 Video Renderer
-# Executa no Kaggle com GPU gratuita
+    NOTEBOOK_CODE_TEMPLATE = '''# Script-to-Cinema: LTX2 Video Renderer Auto-Installer
+# Executa no Kaggle com GPU gratuita (T4 x2)
 
-import subprocess
-import sys
 import os
-import json
+import sys
 import time
+import json
 import base64
 import requests
+import subprocess
 from pathlib import Path
+
+# ============================================================
+# PARÂMETROS E CONFIGS
+# ============================================================
 
 OUTPUT_DIR = Path("/kaggle/working/output")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
 COMFYUI_URL = "{comfyui_url}"
-
-# ============================================================
-# SCENES DATA
-# ============================================================
 
 SCENES_DATA = {scenes_json}
 
 # ============================================================
-# COMFYUI CLIENT
+# INSTALADOR AUTOMÁTICO DO COMFYUI E LTX-VIDEO
 # ============================================================
+def install_requirements():
+    print("🚀 [Fase 1] Inicializando instalador automático do ComfyUI...")
+    
+    # 1. Clonar ComfyUI
+    if not os.path.exists("ComfyUI"):
+        print("Clonando repositório ComfyUI...")
+        os.system("git clone https://github.com/comfyanonymous/ComfyUI.git")
+    
+    # 2. Instalar dependências básicas
+    print("Instalando dependências via pip...")
+    os.system("pip install -r ComfyUI/requirements.txt")
+    os.system("pip install imageio-ffmpeg requests")
+    
+    # 3. Baixar Modelo LTX Video (Checkpoint)
+    ckpt_dir = "ComfyUI/models/checkpoints"
+    os.makedirs(ckpt_dir, exist_ok=True)
+    ltx_model_path = f"{ckpt_dir}/LTX-Video-2B-v0.9.safetensors"
+    if not os.path.exists(ltx_model_path):
+        print(f"Baixando LTX-Video (Isso pode demorar)...")
+        os.system(f"wget -c https://huggingface.co/Lightricks/LTX-Video/resolve/main/ltx-video-2b-v0.9.safetensors -O {ltx_model_path}")
+    
+    # 4. Baixar encoder T5XXL
+    clip_dir = "ComfyUI/models/clip"
+    os.makedirs(clip_dir, exist_ok=True)
+    t5_path = f"{clip_dir}/t5xxl_fp8_e4m3fn.safetensors"
+    if not os.path.exists(t5_path):
+        print("Baixando T5 XXL Text Encoder...")
+        os.system(f"wget -c https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors -O {t5_path}")
+        
+    # 5. Instalar ComfyUI-VideoHelperSuite (necessário para VideoCombine)
+    custom_nodes_dir = "ComfyUI/custom_nodes"
+    if not os.path.exists(f"{custom_nodes_dir}/ComfyUI-VideoHelperSuite"):
+        print("Instalando VideoHelperSuite...")
+        os.system(f"git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git {custom_nodes_dir}/ComfyUI-VideoHelperSuite")
+        os.system(f"pip install -r {custom_nodes_dir}/ComfyUI-VideoHelperSuite/requirements.txt")
+
+# ============================================================
+# COMFYUI CLIENT E RUNNER
+# ============================================================
+
+def start_comfyui():
+    print("🚀 [Fase 2] Ligando o Servidor ComfyUI...")
+    # Roda o main.py direcionando o output terminal silencioso ou log
+    process = subprocess.Popen(["python", "main.py"], cwd="ComfyUI", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    # Poll até a porta abrir
+    print("Aguardando ComfyUI carregar os modelos e abrir a porta 8181 (pode levar 1 minuto)...")
+    for _ in range(60):
+        try:
+            r = requests.get(COMFYUI_URL, timeout=2)
+            if r.status_code == 200:
+                print("✅ ComfyUI Local Online!")
+                return process
+        except requests.exceptions.ConnectionError:
+            time.sleep(2)
+            
+    print("❌ Falha ao iniciar ComfyUI após 2 minutos.")
+    return process
 
 class ComfyUIClient:
     def __init__(self, address="127.0.0.1", port=8181):
         self.address = address
         self.port = port
-        self.base_url = f"http://{{address}}:{{port}}"
-        self.client_id = f"kaggle_{{int(time.time())}}"
+        self.base_url = f"http://{self.address}:{self.port}"
+        self.client_id = f"kaggle_{int(time.time())}"
 
     def queue_prompt(self, workflow):
-        url = f"{{self.base_url}}/prompt"
-        payload = {{"prompt": workflow, "client_id": self.client_id}}
+        url = f"{self.base_url}/prompt"
+        payload = {"prompt": workflow, "client_id": self.client_id}
         response = requests.post(url, json=payload, timeout=30)
         return response.json().get("prompt_id")
 
     def get_history(self, prompt_id):
-        url = f"{{self.base_url}}/history/{{prompt_id}}"
+        url = f"{self.base_url}/history/{prompt_id}"
         return requests.get(url).json()
 
-    def wait_for_completion(self, prompt_id, timeout=600):
+    def wait_for_completion(self, prompt_id, timeout=900):
         start = time.time()
         while time.time() - start < timeout:
             history = self.get_history(prompt_id)
             if prompt_id in history:
-                status = history[prompt_id].get("status", {{}})
+                status = history[prompt_id].get("status", {})
                 if status.get("state") == "completed":
                     return True
                 elif status.get("state") == "failed":
@@ -597,98 +541,61 @@ class ComfyUIClient:
             time.sleep(10)
         return False
 
-    def download_video(self, filename):
-        url = f"{{self.base_url}}/view"
-        params = {{"filename": filename, "type": "output"}}
-        return requests.get(url, params=params).content
-
-# ============================================================
-# LTX2 WORKFLOW
-# ============================================================
-
-def build_ltx2_workflow(prompt, duration=15, seed=None, fps=24):
-    if seed is None:
-        import random
-        seed = random.randint(0, 2**32 - 1)
-
+def build_ltx2_workflow(prompt, duration=15):
+    fps = 24
     frames = duration * fps
-
-    return {{
-        "3": {{
-            "class_type": "CheckpointLoaderSimple",
-            "inputs": {{"ckpt_name": "LTX-Video-2B-v0.9.safetensors"}}
-        }},
-        "4": {{
-            "class_type": "CLIPTextEncode",
-            "inputs": {{"text": prompt, "clip": ["3", 1]}}
-        }},
-        "5": {{
-            "class_type": "CLIPTextEncode",
-            "inputs": {{"text": "low quality, blurry, watermark", "clip": ["3", 1]}}
-        }},
-        "6": {{
-            "class_type": "EmptyLatentVideo",
-            "inputs": {{"width": 1280, "height": 720, "frames": frames, "batch_size": 1}}
-        }},
-        "7": {{
-            "class_type": "KSampler",
-            "inputs": {{
-                "seed": seed,
-                "steps": 40,
-                "cfg": 3.5,
-                "sampler_name": "euler",
-                "scheduler": "normal",
-                "positive": ["4", 0],
-                "negative": ["5", 0],
-                "latent_image": ["6", 0]
-            }}
-        }},
-        "8": {{
-            "class_type": "VAEDecode",
-            "inputs": {{"samples": ["7", 0], "vae": ["3", 2]}}
-        }},
-        "10": {{
-            "class_type": "VideoCombine",
-            "inputs": {{"fps": fps, "images": ["8", 0]}}
-        }},
-        "15": {{
-            "class_type": "SaveVideo",
-            "inputs": {{"video": ["10", 0], "format": "mp4"}}
-        }}
-    }}
-
-# ============================================================
-# RENDER SCENES
-# ============================================================
+    return {
+        "3": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "LTX-Video-2B-v0.9.safetensors"}},
+        "4": {"class_type": "CLIPTextEncode", "inputs": {"text": prompt + ", cinematic 4K, highest quality", "clip": ["3", 1]}},
+        "5": {"class_type": "CLIPTextEncode", "inputs": {"text": "low quality, watermark", "clip": ["3", 1]}},
+        "6": {"class_type": "EmptyLatentVideo", "inputs": {"width": 768, "height": 512, "frames": frames, "batch_size": 1}},
+        "7": {"class_type": "KSampler", "inputs": {"seed": int(time.time()), "steps": 30, "cfg": 3.0, "sampler_name": "euler", "scheduler": "normal", "positive": ["4", 0], "negative": ["5", 0], "latent_image": ["6", 0]}},
+        "8": {"class_type": "VAEDecode", "inputs": {"samples": ["7", 0], "vae": ["3", 2]}},
+        "10": {"class_type": "VideoCombine", "inputs": {"fps": 24, "images": ["8", 0]}},
+        "15": {"class_type": "SaveVideo", "inputs": {"video": ["10", 0], "format": "mp4", "filename_prefix": "LXT2_Output"}}
+    }
 
 def render_scenes():
+    print(f"🚀 [Fase 3] Iniciando renderização de {len(SCENES_DATA)} cenas...")
     client = ComfyUIClient()
     results = []
-
+    
     for i, scene in enumerate(SCENES_DATA):
-        print(f"Rendering scene {{i+1}}/{{len(SCENES_DATA)}}: {{scene['title']}}")
-
-        workflow = build_ltx2_workflow(
-            prompt=scene["prompt"],
-            duration=scene.get("duration", 15)
-        )
-
+        print(f"\\nRenderizando cena {i+1}/{len(SCENES_DATA)}: {scene.get('title', 'Cena')}...")
+        workflow = build_ltx2_workflow(prompt=scene["prompt"], duration=scene.get("duration", 15))
         prompt_id = client.queue_prompt(workflow)
-        print(f"Prompt queued: {{prompt_id}}")
-
-        if client.wait_for_completion(prompt_id, timeout=900):
-            print(f"Scene {{i+1}} complete!")
+        print(f"Prompt {prompt_id} enviado. Aguardando processamento...")
+        
+        if client.wait_for_completion(prompt_id, timeout=1200):
+            print(f"Cena {i+1} concluída com sucesso!")
         else:
-            print(f"Scene {{i+1}} failed!")
-
-        results.append({{"scene": i+1, "status": "done"}})
-
+            print(f"Erro ao renderizar cena {i+1}!")
+            
+        results.append({"scene": i+1, "status": "done"})
+        
     return results
 
 if __name__ == "__main__":
-    print("Starting LTX2 rendering...")
-    results = render_scenes()
-    print(f"Complete: {{len(results)}} scenes")
+    print("="*60)
+    print("SISTEMA DE AUTOMAÇÃO KAGGLE: SCRIPT TO CINEMA")
+    print("="*60)
+    
+    install_requirements()
+    process = start_comfyui()
+    
+    try:
+        results = render_scenes()
+        print(f"\\n✅ Renderização finalizada! Total de Cenas: {{len(results)}}")
+        
+        # Mover arquivos para diretório de saída do Kaggle
+        os.system(f"cp -r ComfyUI/output/* {OUTPUT_DIR}/")
+        print("Arquivos transferidos para /kaggle/working/output/")
+    finally:
+        print("Desligando servidor...")
+        if process:
+            process.terminate()
+        
+    print("Tudo pronto! Fim do script.")
 '''
 
     def __init__(self, comfyui_url: str = "http://127.0.0.1:8181"):
@@ -696,10 +603,9 @@ if __name__ == "__main__":
 
     def generate_notebook_code(self, scenes: List[Dict]) -> str:
         """Gera código Python para Kaggle Notebook."""
-        return self.NOTEBOOK_CODE_TEMPLATE.format(
-            comfyui_url=self.comfyui_url,
-            scenes_json=json.dumps(scenes, ensure_ascii=False, indent=2)
-        )
+        code = self.NOTEBOOK_CODE_TEMPLATE.replace("{comfyui_url}", self.comfyui_url)
+        code = code.replace("{scenes_json}", json.dumps(scenes, ensure_ascii=False, indent=2))
+        return code
 
 
 # =============================================================================
