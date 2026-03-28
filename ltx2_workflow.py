@@ -453,20 +453,20 @@ SCENES_DATA = {scenes_json}
 # INSTALADOR AUTOMÁTICO DO COMFYUI E LTX-VIDEO
 # ============================================================
 def install_requirements():
-    print("🚀 [Fase 1] Inicializando instalador automático do ComfyUI...")
+    print("🚀 [Fase 1] Inicializando instalador automático do ComfyUI em /tmp...")
     
-    # 1. Clonar ComfyUI
-    if not os.path.exists("ComfyUI"):
+    # 1. Clonar ComfyUI no diretório temporário
+    if not os.path.exists("/tmp/ComfyUI"):
         print("Clonando repositório ComfyUI...")
-        os.system("git clone https://github.com/comfyanonymous/ComfyUI.git")
+        os.system("git clone https://github.com/comfyanonymous/ComfyUI.git /tmp/ComfyUI")
     
     # 2. Instalar dependências básicas
     print("Instalando dependências via pip...")
-    os.system("pip install -r ComfyUI/requirements.txt")
+    os.system("pip install -r /tmp/ComfyUI/requirements.txt")
     os.system("pip install imageio-ffmpeg requests")
     
     # 3. Baixar Modelo LTX Video (Checkpoint)
-    ckpt_dir = "ComfyUI/models/checkpoints"
+    ckpt_dir = "/tmp/ComfyUI/models/checkpoints"
     os.makedirs(ckpt_dir, exist_ok=True)
     ltx_model_path = f"{ckpt_dir}/LTX-Video-2B-v0.9.safetensors"
     if not os.path.exists(ltx_model_path):
@@ -474,7 +474,7 @@ def install_requirements():
         os.system(f"wget -c https://huggingface.co/Lightricks/LTX-Video/resolve/main/ltx-video-2b-v0.9.safetensors -O {ltx_model_path}")
     
     # 4. Baixar encoder T5XXL
-    clip_dir = "ComfyUI/models/clip"
+    clip_dir = "/tmp/ComfyUI/models/clip"
     os.makedirs(clip_dir, exist_ok=True)
     t5_path = f"{clip_dir}/t5xxl_fp8_e4m3fn.safetensors"
     if not os.path.exists(t5_path):
@@ -482,7 +482,7 @@ def install_requirements():
         os.system(f"wget -c https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors -O {t5_path}")
         
     # 5. Instalar ComfyUI-VideoHelperSuite (necessário para VideoCombine)
-    custom_nodes_dir = "ComfyUI/custom_nodes"
+    custom_nodes_dir = "/tmp/ComfyUI/custom_nodes"
     if not os.path.exists(f"{custom_nodes_dir}/ComfyUI-VideoHelperSuite"):
         print("Instalando VideoHelperSuite...")
         os.system(f"git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git {custom_nodes_dir}/ComfyUI-VideoHelperSuite")
@@ -495,7 +495,7 @@ def install_requirements():
 def start_comfyui():
     print("🚀 [Fase 2] Ligando o Servidor ComfyUI...")
     # Roda o main.py direcionando o output terminal silencioso ou log
-    process = subprocess.Popen(["python", "main.py"], cwd="ComfyUI", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    process = subprocess.Popen(["python", "main.py"], cwd="/tmp/ComfyUI", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
     # Poll até a porta abrir
     print("Aguardando ComfyUI carregar os modelos e abrir a porta 8181 (pode levar 1 minuto)...")
@@ -588,7 +588,7 @@ if __name__ == "__main__":
         print(f"\\n✅ Renderização finalizada! Total de Cenas: {{len(results)}}")
         
         # Mover arquivos para diretório de saída do Kaggle
-        os.system(f"cp -r ComfyUI/output/* {OUTPUT_DIR}/")
+        os.system(f"cp -r /tmp/ComfyUI/output/* {OUTPUT_DIR}/")
         print("Arquivos transferidos para /kaggle/working/output/")
     finally:
         print("Desligando servidor...")
