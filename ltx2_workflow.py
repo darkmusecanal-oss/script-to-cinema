@@ -562,11 +562,22 @@ def build_ltx2_workflow(prompt, duration=15):
         "4": {"class_type": "CLIPTextEncode", "inputs": {"text": prompt + ", cinematic 4K, highest quality", "clip": ["3", 1]}},
         "5": {"class_type": "CLIPTextEncode", "inputs": {"text": "low quality, watermark, static, blurry", "clip": ["3", 1]}},
         "6": {"class_type": "EmptyLTXVLatentVideo", "inputs": {"width": 768, "height": 512, "length": frames, "batch_size": 1}},
-        "7": {"class_type": "KSampler", "inputs": {"seed": int(time.time()), "steps": 25, "cfg": 3.0, "sampler_name": "euler", "scheduler": "normal", "positive": ["4", 0], "negative": ["5", 0], "latent_image": ["6", 0]}},
+        "7": {"class_type": "KSampler", "inputs": {
+            "model": ["3", 0],
+            "seed": int(time.time()),
+            "steps": 25,
+            "cfg": 3.0,
+            "sampler_name": "euler",
+            "scheduler": "normal",
+            "positive": ["4", 0],
+            "negative": ["5", 0],
+            "latent_image": ["6", 0],
+            "denoise": 1.0
+        }},
         "8": {"class_type": "VAEDecode", "inputs": {"samples": ["7", 0], "vae": ["3", 2]}},
         "10": {"class_type": "VHS_VideoCombine", "inputs": {
             "images": ["8", 0],
-            "fps": fps,
+            "frame_rate": fps,
             "loop_count": 0,
             "filename_prefix": "LTX2_Scene",
             "format": "video/h264-mp4",
@@ -586,10 +597,11 @@ def render_scenes():
         prompt_id = client.queue_prompt(workflow)
         print(f"Prompt {prompt_id} enviado. Aguardando processamento...")
         
-        if client.wait_for_completion(prompt_id, timeout=1200):
+        # Timeout de 50 minutos (3000s) para cenas pesadas na P100
+        if client.wait_for_completion(prompt_id, timeout=3000):
             print(f"Cena {i+1} concluída com sucesso!")
         else:
-            print(f"Erro ao renderizar cena {i+1}!")
+            print(f"Erro ao renderizar cena {i+1} (Timeout)!")
             
         results.append({"scene": i+1, "status": "done"})
         
