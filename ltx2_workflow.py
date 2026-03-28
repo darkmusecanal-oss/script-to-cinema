@@ -494,12 +494,11 @@ def install_requirements():
 
 def start_comfyui():
     print("🚀 [Fase 2] Ligando o Servidor ComfyUI...")
-    # Roda o main.py direcionando o output terminal silencioso ou log
-    process = subprocess.Popen(["python", "main.py"], cwd="/tmp/ComfyUI", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    log_file = open("comfy.log", "w")
+    process = subprocess.Popen(["python", "main.py"], cwd="/tmp/ComfyUI", stdout=log_file, stderr=subprocess.STDOUT)
     
-    # Poll até a porta abrir
-    print("Aguardando ComfyUI carregar os modelos e abrir a porta 8181 (pode levar 1 minuto)...")
-    for _ in range(60):
+    print("Aguardando ComfyUI carregar os modelos e abrir a porta 8188 (pode levar alguns minutos)...")
+    for _ in range(150):
         try:
             r = requests.get(COMFYUI_URL, timeout=2)
             if r.status_code == 200:
@@ -508,11 +507,12 @@ def start_comfyui():
         except requests.exceptions.ConnectionError:
             time.sleep(2)
             
-    print("❌ Falha ao iniciar ComfyUI após 2 minutos.")
-    return process
+    print("❌ Falha ao iniciar ComfyUI após 5 minutos. Log do ComfyUI:")
+    os.system("cat comfy.log")
+    raise Exception("Servidor ComfyUI não iniciou.")
 
 class ComfyUIClient:
-    def __init__(self, address="127.0.0.1", port=8181):
+    def __init__(self, address="127.0.0.1", port=8188):
         self.address = address
         self.port = port
         self.base_url = f"http://{self.address}:{self.port}"
@@ -521,8 +521,15 @@ class ComfyUIClient:
     def queue_prompt(self, workflow):
         url = f"{self.base_url}/prompt"
         payload = {"prompt": workflow, "client_id": self.client_id}
-        response = requests.post(url, json=payload, timeout=30)
-        return response.json().get("prompt_id")
+        try:
+            response = requests.post(url, json=payload, timeout=30)
+            if response.status_code != 200:
+                print(f"❌ Erro ComfyUI ({response.status_code}): {response.text}")
+                return None
+            return response.json().get("prompt_id")
+        except Exception as e:
+            print(f"❌ Falha de Conexão no Prompt: {str(e)}")
+            return None
 
     def get_history(self, prompt_id):
         url = f"{self.base_url}/history/{prompt_id}"
@@ -543,16 +550,23 @@ class ComfyUIClient:
 
 def build_ltx2_workflow(prompt, duration=15):
     fps = 24
-    frames = duration * fps
+    frames = int(duration * fps)
     return {
         "3": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "LTX-Video-2B-v0.9.safetensors"}},
         "4": {"class_type": "CLIPTextEncode", "inputs": {"text": prompt + ", cinematic 4K, highest quality", "clip": ["3", 1]}},
-        "5": {"class_type": "CLIPTextEncode", "inputs": {"text": "low quality, watermark", "clip": ["3", 1]}},
+        "5": {"class_type": "CLIPTextEncode", "inputs": {"text": "low quality, watermark, static, blurry", "clip": ["3", 1]}},
         "6": {"class_type": "EmptyLatentVideo", "inputs": {"width": 768, "height": 512, "frames": frames, "batch_size": 1}},
-        "7": {"class_type": "KSampler", "inputs": {"seed": int(time.time()), "steps": 30, "cfg": 3.0, "sampler_name": "euler", "scheduler": "normal", "positive": ["4", 0], "negative": ["5", 0], "latent_image": ["6", 0]}},
+        "7": {"class_type": "KSampler", "inputs": {"seed": int(time.time()), "steps": 25, "cfg": 3.0, "sampler_name": "euler", "scheduler": "normal", "positive": ["4", 0], "negative": ["5", 0], "latent_image": ["6", 0]}},
         "8": {"class_type": "VAEDecode", "inputs": {"samples": ["7", 0], "vae": ["3", 2]}},
-        "10": {"class_type": "VideoCombine", "inputs": {"fps": 24, "images": ["8", 0]}},
-        "15": {"class_type": "SaveVideo", "inputs": {"video": ["10", 0], "format": "mp4", "filename_prefix": "LXT2_Output"}}
+        "10": {"class_type": "VHS_VideoCombine", "inputs": {
+            "images": ["8", 0],
+            "fps": fps,
+            "loop_count": 0,
+            "filename_prefix": "LTX2_Scene",
+            "format": "video/h264-mp4",
+            "pingpong": False,
+            "save_output": True
+        }}
     }
 
 def render_scenes():
@@ -598,7 +612,7 @@ if __name__ == "__main__":
     print("Tudo pronto! Fim do script.")
 '''
 
-    def __init__(self, comfyui_url: str = "http://127.0.0.1:8181"):
+    def __init__(self, comfyui_url: str = "http://127.0.0.1:8188"):
         self.comfyui_url = comfyui_url
 
     def generate_notebook_code(self, scenes: List[Dict]) -> str:
