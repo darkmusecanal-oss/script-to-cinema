@@ -1,0 +1,14 @@
+{
+  "id": "estounanetdigital/script-to-cinema",
+  "title": "Script-to-Cinema",
+  "code_file": "render_notebook_teste.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "true",
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

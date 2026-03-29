@@ -1,108 +1,4 @@
-"""
-Cinema Workflow Generator (SDXL + SVD Image-to-Video)
-=====================================================
-Pipeline: Gemini Script → SDXL Image → SVD Animation → FFmpeg Assembly
-
-Fase 1: SDXL gera imagens 16:9 cinematográficas a partir dos prompts
-Fase 2: SVD XT 1.1 anima cada imagem em clipes de vídeo
-Fase 3: RIFE interpola frames para suavidade
-Fase 4: FFmpeg monta o vídeo final de 4:30
-"""
-
-import json
-import time
-import requests
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Optional, Dict, Any, List
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
-# =============================================================================
-# DATA CLASSES
-# =============================================================================
-
-@dataclass
-class VideoScene:
-    """Cena de vídeo individual."""
-    scene_number: int
-    title: str
-    prompt: str
-    narration: str = ""
-    duration_seconds: int = 15
-    start_time: float = 0.0
-    scene_type: str = "cinematic"
-    seed: Optional[int] = None
-
-
-# =============================================================================
-# CINEMATIC PROMPT ENHANCER
-# =============================================================================
-
-class CinematicPromptEnhancer:
-    """Melhora prompts para estilo cinematográfico bíblico."""
-
-    ENHANCEMENTS = {
-        "cinematic": {
-            "lighting": "cinematic lighting, volumetric light, golden hour, god rays",
-            "camera": "tracking shot, dramatic camera movement, shallow depth of field",
-            "atmosphere": "epic scale, dramatic atmosphere, epic composition"
-        },
-        "trailer": {
-            "lighting": "dramatic lighting, high contrast, epic lighting",
-            "camera": "dynamic camera movement, sweeping shot, aerial view",
-            "atmosphere": "high impact, epic scale, cinematic drama, suspenseful"
-        },
-        "story": {
-            "lighting": "natural lighting, chiaroscuro, warm tones",
-            "camera": "steady shot, medium close-up, emotional framing",
-            "atmosphere": "intimate, emotional, storytelling, reverent"
-        },
-        "closing": {
-            "lighting": "soft lighting, warm glow, peaceful",
-            "camera": "slow zoom out, wide shot",
-            "atmosphere": "reflective, peaceful, closing mood"
-        }
-    }
-
-    def enhance(self, prompt: str, scene_type: str = "cinematic") -> str:
-        """Melhora prompt com elementos cinematográficos."""
-        enhancements = self.ENHANCEMENTS.get(scene_type, self.ENHANCEMENTS["cinematic"])
-        enhanced = prompt.strip()
-        for key in ["lighting", "camera", "atmosphere"]:
-            if enhancements.get(key):
-                enhanced += f". {enhancements[key]}"
-        enhanced += ". cinematic 4K, film grain, anamorphic lens, 16:9 aspect ratio, masterpiece, best quality"
-        return enhanced
-
-
-# =============================================================================
-# MOTION BUCKET SELECTOR (SVD)
-# =============================================================================
-
-def get_motion_bucket(scene_type: str) -> int:
-    """Retorna motion_bucket_id ideal para cada tipo de cena SVD."""
-    buckets = {
-        "trailer": 180,    # Muito movimento (épico, dinâmico)
-        "cinematic": 127,  # Movimento moderado
-        "story": 110,      # Movimento suave (narrativa)
-        "opening": 80,     # Movimento sutil
-        "closing": 70,     # Movimento mínimo (contemplativo)
-    }
-    return buckets.get(scene_type, 127)
-
-
-# =============================================================================
-# KAGGLE I2V RENDERER (SDXL + SVD)
-# =============================================================================
-
-class KaggleI2VRenderer:
-    """Renderer Image-to-Video via Kaggle Notebook (SDXL + SVD XT 1.1)."""
-
-    NOTEBOOK_CODE_TEMPLATE = '''# ============================================================
+# ============================================================
 # Script-to-Cinema: SDXL + SVD Image-to-Video Pipeline
 # Roda no Kaggle com GPU gratuita T4 (16GB VRAM)
 # ============================================================
@@ -129,7 +25,88 @@ COMFYUI_URL = "http://127.0.0.1:8188"
 # DADOS DAS CENAS (gerados pelo Gemini)
 # ============================================================
 
-SCENES_DATA = SCENES_PLACEHOLDER
+SCENES_DATA = [
+  {
+    "title": "Trailer",
+    "prompt": "Adam standing on a jagged basalt cliff, looking back at a colossal wall of blinding white light and swirling golden energy. His face is etched with profound grief, one hand reaching out toward the light while his body is pulled into the shadows of a gray, rocky wilderness. HBO-style cinematic lighting, ultra-realistic skin textures, 8K, dust particles in the air, heavy emotional atmosphere.",
+    "duration": 30
+  },
+  {
+    "title": "Opening",
+    "prompt": "A warm, reverent cinematic shot of an ancient scholar's study, a heavy wooden table holding an open leather-bound book, golden dust motes dancing in a single beam of sunlight from a high window.",
+    "duration": 15
+  },
+  {
+    "title": "A Primeira Morte",
+    "prompt": "Adam kneeling on dry, cracked earth, staring in horror at a withered, brown flower in his palm. The vibrant garden behind him is now a blurred, unreachable mist. Soft, melancholic side-lighting, focus on the decaying petals.",
+    "duration": 15
+  },
+  {
+    "title": "A Barreira Intransponível",
+    "prompt": "A wide cinematic shot of the flaming sword, a rift of pure white fire tearing through the dark sky, blocking the path back. Adam and Eve's small silhouettes huddle in the vast, cold shadows below.",
+    "duration": 15
+  },
+  {
+    "title": "O Peso do Tempo",
+    "prompt": "Close-up of Adam’s eyes, reflecting the first sunset he ever witnessed outside the garden. His pupils are wide, filled with the terrifying realization of a finite, linear existence. Cinematic grain, emotional intensity.",
+    "duration": 15
+  },
+  {
+    "title": "O Suor do Rosto",
+    "prompt": "Adam forcefully pushing a primitive wooden plow into stubborn, thorny soil. Sweat beads on his forehead, mixing with the dust of the earth. Harsh, mid-day sun, muscles tensed, gritty realism.",
+    "duration": 15
+  },
+  {
+    "title": "A Primeira Vestimenta",
+    "prompt": "Adam and Eve sitting by a small, flickering fire, draped in heavy, dark animal skins. Adam looks at the fur with a mixture of gratitude and shame, realizing life was sacrificed for them.",
+    "duration": 15
+  },
+  {
+    "title": "A Perda da Intuição",
+    "prompt": "Adam sitting under a barren tree, looking up at the stars with a confused, searching expression. He holds his head as if trying to remember a lost language or a forgotten connection. Deep blue night aesthetic.",
+    "duration": 15
+  },
+  {
+    "title": "A Natureza Hostil",
+    "prompt": "A wide shot of a grey, stormy sky over a desolate valley. Adam stands small against the vastness, watching a hawk dive into the mist. The environment looks cold, sharp, and indifferent. 8K landscape.",
+    "duration": 15
+  },
+  {
+    "title": "A Solidão Existencial",
+    "prompt": "Adam standing alone in a shallow cave during a rainstorm, his hand pressed against the cold stone wall. His expression is one of profound loneliness, the silence of the cave echoing his internal state.",
+    "duration": 15
+  },
+  {
+    "title": "O Registro da Memória",
+    "prompt": "Adam using a sharp stone to carve a circular symbol into a rock face, representing the lost sun of Eden. His fingers are stained with red clay, his face determined yet tragic. Close-up on the carving.",
+    "duration": 15
+  },
+  {
+    "title": "O Peso da Responsabilidade",
+    "prompt": "Adam looking at his sleeping family inside a tent made of skins. The weight of being the progenitor of a fallen race is visible in his slumped shoulders and weary gaze. Soft firelight glow.",
+    "duration": 15
+  },
+  {
+    "title": "O Clímax: O Grito",
+    "prompt": "Adam kneeling in the middle of a vast salt flat, head thrown back, mouth wide in a silent scream. No sound emerges, but the veins in his neck are strained. The sky above is a swirl of dark, cosmic clouds.",
+    "duration": 15
+  },
+  {
+    "title": "A Revelação Racional",
+    "prompt": "A symbolic shot where Adam's shadow on the ground takes the form of a cross. The light source is a faint, distant star appearing through the clouds. Cinematic, theological allegory, high contrast.",
+    "duration": 15
+  },
+  {
+    "title": "A Resiliência Humana",
+    "prompt": "Adam standing tall at dawn, looking toward the horizon where the sun is rising. He holds a small green sapling, his face showing a mix of scars and renewed resolve. Epic wide shot, hopeful lighting.",
+    "duration": 15
+  },
+  {
+    "title": "Closing",
+    "prompt": "An ancient, ornate scroll being slowly rolled up on a dark wooden desk, lit by the soft, flickering light of a nearby candle. Divine, peaceful atmosphere.",
+    "duration": 15
+  }
+]
 
 # ============================================================
 # FASE 0: INSTALAÇÃO AUTOMÁTICA
@@ -185,7 +162,7 @@ def install_all():
 # ============================================================
 
 def start_comfyui():
-    print("\\n🚀 Ligando ComfyUI Server...")
+    print("\n🚀 Ligando ComfyUI Server...")
     log_file = open("/kaggle/working/comfy.log", "w")
     process = subprocess.Popen(
         ["python", "main.py", "--listen", "0.0.0.0", "--port", "8188"],
@@ -270,7 +247,7 @@ def build_sdxl_workflow(prompt, negative="", seed=42, prefix="scene"):
 
 
 def generate_all_images(client):
-    print("\\n" + "=" * 60)
+    print("\n" + "=" * 60)
     print("🎨 FASE 1: Gerando imagens com SDXL")
     print("=" * 60)
 
@@ -278,7 +255,7 @@ def generate_all_images(client):
 
     for i, scene in enumerate(SCENES_DATA):
         prefix = f"scene_{i:02d}"
-        print(f"\\n🖼️  Imagem {i+1}/{len(SCENES_DATA)}: {scene.get('title', 'Cena')}")
+        print(f"\n🖼️  Imagem {i+1}/{len(SCENES_DATA)}: {scene.get('title', 'Cena')}")
 
         prompt = scene["prompt"]
         # Adicionar enhancement cinematográfico
@@ -305,7 +282,7 @@ def generate_all_images(client):
         else:
             print(f"   ❌ Falha ao enviar workflow!")
 
-    print("\\n✅ Todas as imagens geradas!")
+    print("\n✅ Todas as imagens geradas!")
 
 
 # ============================================================
@@ -357,7 +334,7 @@ MOTION_BUCKETS = {
 
 
 def animate_all_images(client):
-    print("\\n" + "=" * 60)
+    print("\n" + "=" * 60)
     print("🎬 FASE 2: Animando imagens com SVD XT 1.1")
     print("=" * 60)
 
@@ -369,13 +346,13 @@ def animate_all_images(client):
         # Verificar se a imagem existe
         img_path = f"/tmp/ComfyUI/input/{image_name}"
         if not os.path.exists(img_path):
-            print(f"\\n⚠️  Pulando cena {i+1} (imagem não encontrada)")
+            print(f"\n⚠️  Pulando cena {i+1} (imagem não encontrada)")
             continue
 
         # Motion bucket baseado no tipo de cena
         motion = MOTION_BUCKETS.get(title, 120)
 
-        print(f"\\n🎥 Vídeo {i+1}/{len(SCENES_DATA)}: {title} (motion={motion})")
+        print(f"\n🎥 Vídeo {i+1}/{len(SCENES_DATA)}: {title} (motion={motion})")
 
         seed = int(time.time()) + i + 100
         workflow = build_svd_workflow(image_name, motion_bucket=motion, seed=seed, prefix=video_prefix)
@@ -390,7 +367,7 @@ def animate_all_images(client):
         else:
             print(f"   ❌ Falha ao enviar workflow SVD!")
 
-    print("\\n✅ Todas as animações concluídas!")
+    print("\n✅ Todas as animações concluídas!")
 
 
 # ============================================================
@@ -398,7 +375,7 @@ def animate_all_images(client):
 # ============================================================
 
 def assemble_final_video():
-    print("\\n" + "=" * 60)
+    print("\n" + "=" * 60)
     print("🎞️  FASE 3: Montando vídeo final com FFmpeg")
     print("=" * 60)
 
@@ -457,7 +434,7 @@ def assemble_final_video():
     concat_file = f"{final_dir}/concat.txt"
     with open(concat_file, "w") as f:
         for p in processed:
-            f.write(f"file '{p}'\\n")
+            f.write(f"file '{p}'\n")
 
     # Concatenar tudo
     final_path = f"{final_dir}/cinema_final.mp4"
@@ -470,7 +447,7 @@ def assemble_final_video():
 
     if os.path.exists(final_path):
         size_mb = os.path.getsize(final_path) / (1024 * 1024)
-        print(f"\\n🎬 VÍDEO FINAL: {final_path} ({size_mb:.1f} MB)")
+        print(f"\n🎬 VÍDEO FINAL: {final_path} ({size_mb:.1f} MB)")
     else:
         print("❌ Falha na concatenação final!")
 
@@ -502,45 +479,14 @@ if __name__ == "__main__":
         animate_all_images(client)
         assemble_final_video()
 
-        print("\\n" + "=" * 60)
+        print("\n" + "=" * 60)
         print("🏆 PIPELINE COMPLETO!")
         print("=" * 60)
     except Exception as e:
-        print(f"\\n❌ ERRO: {e}")
+        print(f"\n❌ ERRO: {e}")
         import traceback
         traceback.print_exc()
     finally:
         if process:
             process.terminate()
         print("🔌 Servidor desligado.")
-'''
-
-    def __init__(self, comfyui_url: str = "http://127.0.0.1:8188"):
-        self.comfyui_url = comfyui_url
-        self.prompt_enhancer = CinematicPromptEnhancer()
-
-    def generate_notebook_code(self, scenes: List[Dict]) -> str:
-        """Gera código Python para Kaggle Notebook."""
-        scenes_json = json.dumps(scenes, ensure_ascii=False, indent=2)
-        code = self.NOTEBOOK_CODE_TEMPLATE.replace("SCENES_PLACEHOLDER", scenes_json)
-        return code
-
-
-# =============================================================================
-# BACKWARD COMPAT: Manter a classe antiga para referência
-# =============================================================================
-
-KaggleLTX2Renderer = KaggleI2VRenderer
-
-
-# =============================================================================
-# EXAMPLE USAGE
-# =============================================================================
-
-if __name__ == "__main__":
-    enhancer = CinematicPromptEnhancer()
-    test = enhancer.enhance(
-        "Moses standing on mountain peak, divine light",
-        "trailer"
-    )
-    print(f"Enhanced: {test}")
