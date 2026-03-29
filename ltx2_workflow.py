@@ -145,8 +145,9 @@ def install_all():
         print("📦 Clonando ComfyUI...")
         os.system("git clone https://github.com/comfyanonymous/ComfyUI.git /tmp/ComfyUI")
 
-    # 2. Instalar dependências
-    print("📦 Instalando dependências...")
+    # 2. Corrigir PyTorch (Kaggle P100/T4 compatibilidade) e instalar dependencias
+    print("📦 Instalando PyTorch 2.4.1 (Suporte P100/T4) e dependências...")
+    os.system("pip install -q torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121")
     os.system("pip install -q -r /tmp/ComfyUI/requirements.txt")
     os.system("pip install -q imageio-ffmpeg requests")
 
