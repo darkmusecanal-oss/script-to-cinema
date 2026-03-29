@@ -1,123 +1,122 @@
 {
-    "title": "O Grito Silencioso de Adão: A Psicologia do Exílio",
+    "title": "O Grito Silencioso de Adão Após o Éden",
     "theme": "O Grito Silencioso de Adão Após o Éden",
     "trailer": {
-        "prompt": "Adam standing on a jagged basalt cliff, looking back at a colossal wall of blinding white light and swirling golden energy. His face is etched with profound grief, one hand reaching out toward the light while his body is pulled into the shadows of a gray, rocky wilderness. HBO-style cinematic lighting, ultra-realistic skin textures, 8K, dust particles in the air, heavy emotional atmosphere.",
-        "narration": "O paraíso tornou-se uma memória dolorosa. O silêncio de Deus é o maior fardo humano.",
+        "prompt": "Cinematic wide shot of Adam kneeling on scorched earth outside the massive, glowing golden gates of Eden, his back to the camera, head bowed in agonizing silence, dramatic HBO-style lighting, swirling dust and embers, hyper-realistic textures, 8K, epic scale.",
+        "narration": "O paraíso foi perdido. Mas o silêncio de Adão esconde o maior segredo da humanidade.",
         "duration": 30
     },
     "opening_scene": {
-        "prompt": "A warm, reverent cinematic shot of an ancient scholar's study, a heavy wooden table holding an open leather-bound book, golden dust motes dancing in a single beam of sunlight from a high window.",
+        "prompt": "A warm, reverent cinematic shot of an ancient scholar's study with golden light, an open vellum manuscript on a wooden table, dust motes dancing in the sunbeams.",
         "narration": "Olá e bem-vindos ao Além do Versículo. Hoje mergulhamos na verdadeira história de O Grito Silencioso de Adão Após o Éden. Fique conosco até o final, pois temos uma surpresa especial para você.",
         "duration": 15
     },
     "story_scenes": [
         {
             "scene_number": 1,
-            "title": "A Primeira Morte",
-            "prompt": "Adam kneeling on dry, cracked earth, staring in horror at a withered, brown flower in his palm. The vibrant garden behind him is now a blurred, unreachable mist. Soft, melancholic side-lighting, focus on the decaying petals.",
-            "narration": "Adão não perdeu apenas um jardim; ele descobriu a entropia e o fim da perfeição.",
+            "title": "O Choque da Realidade",
+            "prompt": "Extreme close-up of Adam's eyes reflecting the fading glow of Eden’s gates, pupils dilated, expression of profound ontological shock, cinematic lighting, 8K.",
+            "narration": "A expulsão não foi apenas geográfica; foi o colapso psicológico de uma consciência perfeita.",
             "duration": 15
         },
         {
             "scene_number": 2,
-            "title": "A Barreira Intransponível",
-            "prompt": "A wide cinematic shot of the flaming sword, a rift of pure white fire tearing through the dark sky, blocking the path back. Adam and Eve's small silhouettes huddle in the vast, cold shadows below.",
-            "narration": "A sentinela de fogo não protegia o Éden, mas marcava a fronteira da consciência caída.",
+            "title": "O Primeiro Toque da Dor",
+            "prompt": "Close-up of Adam's hand touching a sharp thorn on a wild bush, a single drop of blood forming, bokeh background of a desolate landscape, hyper-realistic.",
+            "narration": "Pela primeira vez, a biologia humana conheceu a dor física e a fragilidade da vida.",
             "duration": 15
         },
         {
             "scene_number": 3,
-            "title": "O Peso do Tempo",
-            "prompt": "Close-up of Adam’s eyes, reflecting the first sunset he ever witnessed outside the garden. His pupils are wide, filled with the terrifying realization of a finite, linear existence. Cinematic grain, emotional intensity.",
-            "narration": "Pela primeira vez, o tempo não era um presente, mas uma contagem regressiva para o pó.",
+            "title": "A Geometria do Caos",
+            "prompt": "Wide shot of Adam standing on a rocky cliff overlooking a vast, untamed wilderness at twilight, wind whipping his hair, cinematic atmosphere, cold blue tones.",
+            "narration": "O mundo exterior era um labirinto de incertezas, onde a ordem divina parecia ter desaparecido.",
             "duration": 15
         },
         {
             "scene_number": 4,
-            "title": "O Suor do Rosto",
-            "prompt": "Adam forcefully pushing a primitive wooden plow into stubborn, thorny soil. Sweat beads on his forehead, mixing with the dust of the earth. Harsh, mid-day sun, muscles tensed, gritty realism.",
-            "narration": "A providência deu lugar ao esforço; a sobrevivência tornou-se a primeira ocupação da mente humana.",
+            "title": "O Peso do Suor",
+            "prompt": "Medium shot of Adam wiping sweat from his forehead with a dirty hand, muscles strained, looking down at a primitive stone tool, golden hour lighting, cinematic grit.",
+            "narration": "O trabalho tornou-se o novo mediador entre o homem e a terra agora hostil e seca.",
             "duration": 15
         },
         {
             "scene_number": 5,
-            "title": "A Primeira Vestimenta",
-            "prompt": "Adam and Eve sitting by a small, flickering fire, draped in heavy, dark animal skins. Adam looks at the fur with a mixture of gratitude and shame, realizing life was sacrificed for them.",
-            "narration": "O couro que os aquecia era o testemunho mudo de que o sangue agora era necessário.",
+            "title": "A Ausência da Voz",
+            "prompt": "Adam sitting alone by a small fire at night, looking up at the vast Milky Way, expression of deep longing and cosmic loneliness, cinematic shadows.",
+            "narration": "O silêncio de Deus era um ruído ensurdecedor na mente do primeiro homem exilado.",
             "duration": 15
         },
         {
             "scene_number": 6,
-            "title": "A Perda da Intuição",
-            "prompt": "Adam sitting under a barren tree, looking up at the stars with a confused, searching expression. He holds his head as if trying to remember a lost language or a forgotten connection. Deep blue night aesthetic.",
-            "narration": "A conexão intuitiva com o Criador foi substituída pelo raciocínio lento e pelas dúvidas angustiantes.",
+            "title": "Memória como Tortura",
+            "prompt": "A dreamlike, blurry vision of the lush Garden of Eden seen through a veil of mist, ethereal lighting, vibrant colors contrasting with Adam’s dark foreground.",
+            "narration": "A memória do paraíso não era consolo, mas uma ferida aberta que nunca cicatrizava.",
             "duration": 15
         },
         {
             "scene_number": 7,
-            "title": "A Natureza Hostil",
-            "prompt": "A wide shot of a grey, stormy sky over a desolate valley. Adam stands small against the vastness, watching a hawk dive into the mist. The environment looks cold, sharp, and indifferent. 8K landscape.",
-            "narration": "A natureza, antes em harmonia, agora sussurrava ameaças em cada vento e em cada sombra.",
+            "title": "O Luto da Perfeição",
+            "prompt": "Adam and Eve sitting back-to-back in a cave entrance, shrouded in shadow, looking in opposite directions, symbolizing the first interpersonal tension and collective grief.",
+            "narration": "Eles não perderam apenas um lugar; perderam a versão perfeita de si mesmos e do outro.",
             "duration": 15
         },
         {
             "scene_number": 8,
-            "title": "A Solidão Existencial",
-            "prompt": "Adam standing alone in a shallow cave during a rainstorm, his hand pressed against the cold stone wall. His expression is one of profound loneliness, the silence of the cave echoing his internal state.",
-            "narration": "O grito de Adão era silencioso porque não havia palavras para descrever a ausência de Deus.",
+            "title": "A Descoberta do Tempo",
+            "prompt": "Close-up of an hourglass made of stone and sand on the ground, or Adam watching leaves wither and turn to dust in his palm, 8K photorealistic.",
+            "narration": "Fora do Éden, Adão descobriu o tempo: a contagem regressiva para o retorno ao pó.",
             "duration": 15
         },
         {
             "scene_number": 9,
-            "title": "O Registro da Memória",
-            "prompt": "Adam using a sharp stone to carve a circular symbol into a rock face, representing the lost sun of Eden. His fingers are stained with red clay, his face determined yet tragic. Close-up on the carving.",
-            "narration": "Ele tornou-se o primeiro historiador, tentando desesperadamente preservar a glória que seus filhos nunca veriam.",
+            "title": "O Nome das Coisas Mortas",
+            "prompt": "Adam looking at the skeleton of a fallen animal in the desert, his face displaying a mix of curiosity and horror, cinematic backlight, 8K.",
+            "narration": "Aquele que deu nome aos animais agora precisava dar nome à morte e ao apodrecimento.",
             "duration": 15
         },
         {
             "scene_number": 10,
-            "title": "O Peso da Responsabilidade",
-            "prompt": "Adam looking at his sleeping family inside a tent made of skins. The weight of being the progenitor of a fallen race is visible in his slumped shoulders and weary gaze. Soft firelight glow.",
-            "narration": "Ele carregava o fardo de ser a ponte quebrada entre o céu e a terra firme.",
+            "title": "A Psicologia do Medo",
+            "prompt": "Adam looking at his reflection in a dark, murky pond, his face distorted by ripples, representing the fragmented human psyche after the fall.",
+            "narration": "O medo tornou-se a emoção primária, substituindo a confiança absoluta que outrora o guiava.",
             "duration": 15
         },
         {
             "scene_number": 11,
-            "title": "O Clímax: O Grito",
-            "prompt": "Adam kneeling in the middle of a vast salt flat, head thrown back, mouth wide in a silent scream. No sound emerges, but the veins in his neck are strained. The sky above is a swirl of dark, cosmic clouds.",
-            "narration": "Seu grito não pedia retorno, mas misericórdia para uma linhagem que ele mesmo condenou.",
+            "title": "O Grito Interno",
+            "prompt": "Adam standing on a mountain peak under a stormy sky, chest expanded, mouth closed, but his neck veins straining, powerful cinematic composition.",
+            "narration": "Seu grito era silencioso porque não havia palavras para descrever a perda do infinito.",
             "duration": 15
         },
         {
             "scene_number": 12,
-            "title": "A Revelação Racional",
-            "prompt": "A symbolic shot where Adam's shadow on the ground takes the form of a cross. The light source is a faint, distant star appearing through the clouds. Cinematic, theological allegory, high contrast.",
-            "narration": "A razão ditava que o exílio era justo, mas a esperança sugeria um resgate futuro prometido.",
+            "title": "A Primeira Oração",
+            "prompt": "Adam pressing his forehead against a cold stone altar, a single tear falling, soft divine light breaking through clouds in the distance, cinematic hope.",
+            "narration": "Nesse grito mudo nasceu a religião: a tentativa desesperada de restabelecer a conexão perdida.",
             "duration": 15
         },
         {
             "scene_number": 13,
-            "title": "A Resiliência Humana",
-            "prompt": "Adam standing tall at dawn, looking toward the horizon where the sun is rising. He holds a small green sapling, his face showing a mix of scars and renewed resolve. Epic wide shot, hopeful lighting.",
-            "narration": "Adão aceitou o pó, mas decidiu caminhar, transformando a dor em semente para a humanidade.",
+            "title": "O Legado do Exílio",
+            "prompt": "Side profile of Adam walking toward a distant horizon, his silhouette small against the vast sky, a sense of resilience and tragic nobility, 8K.",
+            "narration": "Somos todos herdeiros desse grito, buscando no finito o rastro do eterno lar perdido.",
             "duration": 15
         }
     ],
     "closing_scene": {
-        "prompt": "An ancient, ornate scroll being slowly rolled up on a dark wooden desk, lit by the soft, flickering light of a nearby candle. Divine, peaceful atmosphere.",
+        "prompt": "An ancient leather-bound scroll being slowly rolled up on a dark wooden desk, soft divine light from a window illuminating the texture of the paper.",
         "narration": "Gostou do episódio? A surpresa prometida é o nosso Mangá Bíblico grátis! Clique no link na descrição para baixar. Inscreva-se e que a paz esteja com você.",
         "duration": 15
     },
-    "description": "Exploramos a profundidade psicológica e teológica do exílio de Adão. O que aconteceu na mente do primeiro homem ao enfrentar o silêncio de Deus e a dureza da terra? Uma análise racional sobre fé, perda e a origem da resiliência humana. Baixe nosso Mangá Bíblico gratuito no link abaixo!",
+    "description": "Neste episódio do Além do Versículo, exploramos a profundidade psicológica e teológica do exílio de Adão. O que aconteceu na mente do primeiro homem ao encarar o silêncio de Deus? Analisamos a transição do paraíso para a sobrevivência sob uma ótica racional e histórica. Baixe nosso Mangá Bíblico gratuito no link abaixo!",
     "tags": [
         "Adão e Eva",
         "Gênesis",
-        "Filosofia Bíblica",
         "Teologia",
-        "História da Humanidade",
+        "História Bíblica",
+        "Filosofia",
         "Além do Versículo",
-        "Documentário Bíblico",
-        "Psicologia de Adão"
+        "Documentário Bíblico"
     ]
 }

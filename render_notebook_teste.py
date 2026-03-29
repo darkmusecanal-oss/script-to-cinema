@@ -28,82 +28,82 @@ COMFYUI_URL = "http://127.0.0.1:8188"
 SCENES_DATA = [
   {
     "title": "Trailer",
-    "prompt": "Adam standing on a jagged basalt cliff, looking back at a colossal wall of blinding white light and swirling golden energy. His face is etched with profound grief, one hand reaching out toward the light while his body is pulled into the shadows of a gray, rocky wilderness. HBO-style cinematic lighting, ultra-realistic skin textures, 8K, dust particles in the air, heavy emotional atmosphere.",
+    "prompt": "Cinematic wide shot of Adam kneeling on scorched earth outside the massive, glowing golden gates of Eden, his back to the camera, head bowed in agonizing silence, dramatic HBO-style lighting, swirling dust and embers, hyper-realistic textures, 8K, epic scale.",
     "duration": 30
   },
   {
     "title": "Opening",
-    "prompt": "A warm, reverent cinematic shot of an ancient scholar's study, a heavy wooden table holding an open leather-bound book, golden dust motes dancing in a single beam of sunlight from a high window.",
+    "prompt": "A warm, reverent cinematic shot of an ancient scholar's study with golden light, an open vellum manuscript on a wooden table, dust motes dancing in the sunbeams.",
     "duration": 15
   },
   {
-    "title": "A Primeira Morte",
-    "prompt": "Adam kneeling on dry, cracked earth, staring in horror at a withered, brown flower in his palm. The vibrant garden behind him is now a blurred, unreachable mist. Soft, melancholic side-lighting, focus on the decaying petals.",
+    "title": "O Choque da Realidade",
+    "prompt": "Extreme close-up of Adam's eyes reflecting the fading glow of Eden’s gates, pupils dilated, expression of profound ontological shock, cinematic lighting, 8K.",
     "duration": 15
   },
   {
-    "title": "A Barreira Intransponível",
-    "prompt": "A wide cinematic shot of the flaming sword, a rift of pure white fire tearing through the dark sky, blocking the path back. Adam and Eve's small silhouettes huddle in the vast, cold shadows below.",
+    "title": "O Primeiro Toque da Dor",
+    "prompt": "Close-up of Adam's hand touching a sharp thorn on a wild bush, a single drop of blood forming, bokeh background of a desolate landscape, hyper-realistic.",
     "duration": 15
   },
   {
-    "title": "O Peso do Tempo",
-    "prompt": "Close-up of Adam’s eyes, reflecting the first sunset he ever witnessed outside the garden. His pupils are wide, filled with the terrifying realization of a finite, linear existence. Cinematic grain, emotional intensity.",
+    "title": "A Geometria do Caos",
+    "prompt": "Wide shot of Adam standing on a rocky cliff overlooking a vast, untamed wilderness at twilight, wind whipping his hair, cinematic atmosphere, cold blue tones.",
     "duration": 15
   },
   {
-    "title": "O Suor do Rosto",
-    "prompt": "Adam forcefully pushing a primitive wooden plow into stubborn, thorny soil. Sweat beads on his forehead, mixing with the dust of the earth. Harsh, mid-day sun, muscles tensed, gritty realism.",
+    "title": "O Peso do Suor",
+    "prompt": "Medium shot of Adam wiping sweat from his forehead with a dirty hand, muscles strained, looking down at a primitive stone tool, golden hour lighting, cinematic grit.",
     "duration": 15
   },
   {
-    "title": "A Primeira Vestimenta",
-    "prompt": "Adam and Eve sitting by a small, flickering fire, draped in heavy, dark animal skins. Adam looks at the fur with a mixture of gratitude and shame, realizing life was sacrificed for them.",
+    "title": "A Ausência da Voz",
+    "prompt": "Adam sitting alone by a small fire at night, looking up at the vast Milky Way, expression of deep longing and cosmic loneliness, cinematic shadows.",
     "duration": 15
   },
   {
-    "title": "A Perda da Intuição",
-    "prompt": "Adam sitting under a barren tree, looking up at the stars with a confused, searching expression. He holds his head as if trying to remember a lost language or a forgotten connection. Deep blue night aesthetic.",
+    "title": "Memória como Tortura",
+    "prompt": "A dreamlike, blurry vision of the lush Garden of Eden seen through a veil of mist, ethereal lighting, vibrant colors contrasting with Adam’s dark foreground.",
     "duration": 15
   },
   {
-    "title": "A Natureza Hostil",
-    "prompt": "A wide shot of a grey, stormy sky over a desolate valley. Adam stands small against the vastness, watching a hawk dive into the mist. The environment looks cold, sharp, and indifferent. 8K landscape.",
+    "title": "O Luto da Perfeição",
+    "prompt": "Adam and Eve sitting back-to-back in a cave entrance, shrouded in shadow, looking in opposite directions, symbolizing the first interpersonal tension and collective grief.",
     "duration": 15
   },
   {
-    "title": "A Solidão Existencial",
-    "prompt": "Adam standing alone in a shallow cave during a rainstorm, his hand pressed against the cold stone wall. His expression is one of profound loneliness, the silence of the cave echoing his internal state.",
+    "title": "A Descoberta do Tempo",
+    "prompt": "Close-up of an hourglass made of stone and sand on the ground, or Adam watching leaves wither and turn to dust in his palm, 8K photorealistic.",
     "duration": 15
   },
   {
-    "title": "O Registro da Memória",
-    "prompt": "Adam using a sharp stone to carve a circular symbol into a rock face, representing the lost sun of Eden. His fingers are stained with red clay, his face determined yet tragic. Close-up on the carving.",
+    "title": "O Nome das Coisas Mortas",
+    "prompt": "Adam looking at the skeleton of a fallen animal in the desert, his face displaying a mix of curiosity and horror, cinematic backlight, 8K.",
     "duration": 15
   },
   {
-    "title": "O Peso da Responsabilidade",
-    "prompt": "Adam looking at his sleeping family inside a tent made of skins. The weight of being the progenitor of a fallen race is visible in his slumped shoulders and weary gaze. Soft firelight glow.",
+    "title": "A Psicologia do Medo",
+    "prompt": "Adam looking at his reflection in a dark, murky pond, his face distorted by ripples, representing the fragmented human psyche after the fall.",
     "duration": 15
   },
   {
-    "title": "O Clímax: O Grito",
-    "prompt": "Adam kneeling in the middle of a vast salt flat, head thrown back, mouth wide in a silent scream. No sound emerges, but the veins in his neck are strained. The sky above is a swirl of dark, cosmic clouds.",
+    "title": "O Grito Interno",
+    "prompt": "Adam standing on a mountain peak under a stormy sky, chest expanded, mouth closed, but his neck veins straining, powerful cinematic composition.",
     "duration": 15
   },
   {
-    "title": "A Revelação Racional",
-    "prompt": "A symbolic shot where Adam's shadow on the ground takes the form of a cross. The light source is a faint, distant star appearing through the clouds. Cinematic, theological allegory, high contrast.",
+    "title": "A Primeira Oração",
+    "prompt": "Adam pressing his forehead against a cold stone altar, a single tear falling, soft divine light breaking through clouds in the distance, cinematic hope.",
     "duration": 15
   },
   {
-    "title": "A Resiliência Humana",
-    "prompt": "Adam standing tall at dawn, looking toward the horizon where the sun is rising. He holds a small green sapling, his face showing a mix of scars and renewed resolve. Epic wide shot, hopeful lighting.",
+    "title": "O Legado do Exílio",
+    "prompt": "Side profile of Adam walking toward a distant horizon, his silhouette small against the vast sky, a sense of resilience and tragic nobility, 8K.",
     "duration": 15
   },
   {
     "title": "Closing",
-    "prompt": "An ancient, ornate scroll being slowly rolled up on a dark wooden desk, lit by the soft, flickering light of a nearby candle. Divine, peaceful atmosphere.",
+    "prompt": "An ancient leather-bound scroll being slowly rolled up on a dark wooden desk, soft divine light from a window illuminating the texture of the paper.",
     "duration": 15
   }
 ]
@@ -122,24 +122,60 @@ def install_all():
         print("📦 Clonando ComfyUI...")
         os.system("git clone https://github.com/comfyanonymous/ComfyUI.git /tmp/ComfyUI")
 
-    # 2. Instalar dependências
-    print("📦 Instalando dependências...")
+    # 2. Corrigir PyTorch (Kaggle P100/T4 compatibilidade) e instalar dependencias
+    print("📦 Instalando PyTorch 2.4.1 (Suporte P100/T4) e dependencias...")
+    os.system("pip install -q torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121")
     os.system("pip install -q -r /tmp/ComfyUI/requirements.txt")
-    os.system("pip install -q imageio-ffmpeg requests")
+    os.system("pip install -q imageio-ffmpeg requests huggingface_hub")
 
-    # 3. Baixar SDXL Base 1.0
+    # 3. Baixar SDXL Base 1.0 (fp16 = ~6.5GB)
     ckpt_dir = "/tmp/ComfyUI/models/checkpoints"
     os.makedirs(ckpt_dir, exist_ok=True)
-    sdxl_path = f"{ckpt_dir}/sd_xl_base_1.0.safetensors"
-    if not os.path.exists(sdxl_path):
-        print("📥 Baixando SDXL Base 1.0 (~6.5GB)...")
-        os.system(f"wget -q --show-progress -c https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors -O {sdxl_path}")
 
-    # 4. Baixar SVD XT 1.1
+    sdxl_path = f"{ckpt_dir}/sd_xl_base_1.0.safetensors"
+    min_sdxl_size = 5_000_000_000  # 5GB minimo
+    if not os.path.exists(sdxl_path) or os.path.getsize(sdxl_path) < min_sdxl_size:
+        if os.path.exists(sdxl_path):
+            os.remove(sdxl_path)
+        print("📥 Baixando SDXL Base 1.0 (~6.5GB) via huggingface_hub...")
+        from huggingface_hub import hf_hub_download
+        hf_hub_download(
+            repo_id="stabilityai/stable-diffusion-xl-base-1.0",
+            filename="sd_xl_base_1.0.safetensors",
+            local_dir=ckpt_dir,
+            local_dir_use_symlinks=False
+        )
+        print(f"   SDXL: {os.path.getsize(sdxl_path) / 1e9:.1f} GB")
+
+    # 4. Baixar SVD XT 1.1 (~4.1GB) - PRECISA de download cuidadoso
     svd_path = f"{ckpt_dir}/svd_xt_1_1.safetensors"
-    if not os.path.exists(svd_path):
-        print("📥 Baixando SVD XT 1.1 (~4.1GB)...")
-        os.system(f"wget -q --show-progress -c https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1/resolve/main/svd_xt_1_1.safetensors -O {svd_path}")
+    min_svd_size = 3_000_000_000  # 3GB minimo
+    if not os.path.exists(svd_path) or os.path.getsize(svd_path) < min_svd_size:
+        if os.path.exists(svd_path):
+            os.remove(svd_path)
+        print("📥 Baixando SVD XT 1.1 (~4.1GB) via huggingface_hub...")
+        from huggingface_hub import hf_hub_download
+        hf_hub_download(
+            repo_id="stabilityai/stable-video-diffusion-img2vid-xt-1-1",
+            filename="svd_xt_1_1.safetensors",
+            local_dir=ckpt_dir,
+            local_dir_use_symlinks=False
+        )
+        actual_size = os.path.getsize(svd_path) if os.path.exists(svd_path) else 0
+        print(f"   SVD: {actual_size / 1e9:.1f} GB")
+        if actual_size < min_svd_size:
+            print("❌ ERRO: SVD download corrompido! Tentando via wget direto...")
+            os.system(f"rm -f {svd_path}")
+            os.system(f"wget -c 'https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1/resolve/main/svd_xt_1_1.safetensors?download=true' -O {svd_path}")
+
+    # Verificacao final
+    for name, path, min_s in [("SDXL", sdxl_path, min_sdxl_size), ("SVD", svd_path, min_svd_size)]:
+        if os.path.exists(path):
+            sz = os.path.getsize(path)
+            status = "OK" if sz > min_s else "CORROMPIDO"
+            print(f"   {name}: {sz / 1e9:.2f} GB [{status}]")
+        else:
+            print(f"   {name}: ARQUIVO NAO ENCONTRADO!")
 
     # 5. Instalar VideoHelperSuite
     custom_dir = "/tmp/ComfyUI/custom_nodes"
@@ -154,7 +190,7 @@ def install_all():
         os.system(f"git clone https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git {custom_dir}/ComfyUI-Frame-Interpolation")
         os.system(f"pip install -q -r {custom_dir}/ComfyUI-Frame-Interpolation/requirements.txt")
 
-    print("✅ Instalação completa!")
+    print("✅ Instalacao completa!")
 
 
 # ============================================================
@@ -211,11 +247,19 @@ class ComfyClient:
                 if r.status_code == 200:
                     h = r.json()
                     if prompt_id in h:
-                        state = h[prompt_id].get("status", {}).get("status_str", "")
-                        if state == "success":
+                        entry = h[prompt_id]
+                        status = entry.get("status", {})
+                        status_str = status.get("status_str", "")
+                        completed = status.get("completed", False)
+                        # Check for success
+                        if status_str == "success" or completed:
                             return True
-                        if "error" in state.lower():
-                            print(f"❌ Workflow falhou: {state}")
+                        # Check for error
+                        if status_str == "error" or "error" in str(status).lower():
+                            msgs = entry.get("status", {}).get("messages", [])
+                            print(f"❌ Workflow falhou: {status_str}")
+                            for msg in msgs[-3:]:
+                                print(f"   Detalhe: {str(msg)[:200]}")
                             return False
             except:
                 pass

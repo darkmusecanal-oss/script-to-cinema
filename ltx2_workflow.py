@@ -146,24 +146,59 @@ def install_all():
         os.system("git clone https://github.com/comfyanonymous/ComfyUI.git /tmp/ComfyUI")
 
     # 2. Corrigir PyTorch (Kaggle P100/T4 compatibilidade) e instalar dependencias
-    print("📦 Instalando PyTorch 2.4.1 (Suporte P100/T4) e dependências...")
+    print("📦 Instalando PyTorch 2.4.1 (Suporte P100/T4) e dependencias...")
     os.system("pip install -q torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121")
     os.system("pip install -q -r /tmp/ComfyUI/requirements.txt")
-    os.system("pip install -q imageio-ffmpeg requests")
+    os.system("pip install -q imageio-ffmpeg requests huggingface_hub")
 
-    # 3. Baixar SDXL Base 1.0
+    # 3. Baixar SDXL Base 1.0 (fp16 = ~6.5GB)
     ckpt_dir = "/tmp/ComfyUI/models/checkpoints"
     os.makedirs(ckpt_dir, exist_ok=True)
-    sdxl_path = f"{ckpt_dir}/sd_xl_base_1.0.safetensors"
-    if not os.path.exists(sdxl_path):
-        print("📥 Baixando SDXL Base 1.0 (~6.5GB)...")
-        os.system(f"wget -q --show-progress -c https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors -O {sdxl_path}")
 
-    # 4. Baixar SVD XT 1.1
+    sdxl_path = f"{ckpt_dir}/sd_xl_base_1.0.safetensors"
+    min_sdxl_size = 5_000_000_000  # 5GB minimo
+    if not os.path.exists(sdxl_path) or os.path.getsize(sdxl_path) < min_sdxl_size:
+        if os.path.exists(sdxl_path):
+            os.remove(sdxl_path)
+        print("📥 Baixando SDXL Base 1.0 (~6.5GB) via huggingface_hub...")
+        from huggingface_hub import hf_hub_download
+        hf_hub_download(
+            repo_id="stabilityai/stable-diffusion-xl-base-1.0",
+            filename="sd_xl_base_1.0.safetensors",
+            local_dir=ckpt_dir,
+            local_dir_use_symlinks=False
+        )
+        print(f"   SDXL: {os.path.getsize(sdxl_path) / 1e9:.1f} GB")
+
+    # 4. Baixar SVD XT 1.1 (~4.1GB) - PRECISA de download cuidadoso
     svd_path = f"{ckpt_dir}/svd_xt_1_1.safetensors"
-    if not os.path.exists(svd_path):
-        print("📥 Baixando SVD XT 1.1 (~4.1GB)...")
-        os.system(f"wget -q --show-progress -c https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1/resolve/main/svd_xt_1_1.safetensors -O {svd_path}")
+    min_svd_size = 3_000_000_000  # 3GB minimo
+    if not os.path.exists(svd_path) or os.path.getsize(svd_path) < min_svd_size:
+        if os.path.exists(svd_path):
+            os.remove(svd_path)
+        print("📥 Baixando SVD XT 1.1 (~4.1GB) via huggingface_hub...")
+        from huggingface_hub import hf_hub_download
+        hf_hub_download(
+            repo_id="stabilityai/stable-video-diffusion-img2vid-xt-1-1",
+            filename="svd_xt_1_1.safetensors",
+            local_dir=ckpt_dir,
+            local_dir_use_symlinks=False
+        )
+        actual_size = os.path.getsize(svd_path) if os.path.exists(svd_path) else 0
+        print(f"   SVD: {actual_size / 1e9:.1f} GB")
+        if actual_size < min_svd_size:
+            print("❌ ERRO: SVD download corrompido! Tentando via wget direto...")
+            os.system(f"rm -f {svd_path}")
+            os.system(f"wget -c 'https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1/resolve/main/svd_xt_1_1.safetensors?download=true' -O {svd_path}")
+
+    # Verificacao final
+    for name, path, min_s in [("SDXL", sdxl_path, min_sdxl_size), ("SVD", svd_path, min_svd_size)]:
+        if os.path.exists(path):
+            sz = os.path.getsize(path)
+            status = "OK" if sz > min_s else "CORROMPIDO"
+            print(f"   {name}: {sz / 1e9:.2f} GB [{status}]")
+        else:
+            print(f"   {name}: ARQUIVO NAO ENCONTRADO!")
 
     # 5. Instalar VideoHelperSuite
     custom_dir = "/tmp/ComfyUI/custom_nodes"
@@ -178,7 +213,7 @@ def install_all():
         os.system(f"git clone https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git {custom_dir}/ComfyUI-Frame-Interpolation")
         os.system(f"pip install -q -r {custom_dir}/ComfyUI-Frame-Interpolation/requirements.txt")
 
-    print("✅ Instalação completa!")
+    print("✅ Instalacao completa!")
 
 
 # ============================================================
@@ -235,11 +270,19 @@ class ComfyClient:
                 if r.status_code == 200:
                     h = r.json()
                     if prompt_id in h:
-                        state = h[prompt_id].get("status", {}).get("status_str", "")
-                        if state == "success":
+                        entry = h[prompt_id]
+                        status = entry.get("status", {})
+                        status_str = status.get("status_str", "")
+                        completed = status.get("completed", False)
+                        # Check for success
+                        if status_str == "success" or completed:
                             return True
-                        if "error" in state.lower():
-                            print(f"❌ Workflow falhou: {state}")
+                        # Check for error
+                        if status_str == "error" or "error" in str(status).lower():
+                            msgs = entry.get("status", {}).get("messages", [])
+                            print(f"❌ Workflow falhou: {status_str}")
+                            for msg in msgs[-3:]:
+                                print(f"   Detalhe: {str(msg)[:200]}")
                             return False
             except:
                 pass
